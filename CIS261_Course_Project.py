@@ -1,7 +1,7 @@
 '''
 Joshua Brock
 CIS261
-Course Project Phase 3
+Course Project Phase 4
 '''
 
 from os import write
@@ -34,7 +34,7 @@ def GetUserPassword():
 def GetUserRole():
      userrole = input("Enter a role (Admin or User): ")
      while True:
-        if (userrole.upper() == "ADMIN" or userrole.upper() == "USER")
+        if (userrole.upper() == "ADMIN" or userrole.upper() == "USER"):
             return userrole
         else: userrole = input("Enter a role(Admin or User): ")
         
@@ -105,44 +105,55 @@ def printInfo(empDetailList):
     totalGrossPay = 0.00
     totalTax = 0.00
     totalNetPay = 0.00
-    EmpFile = open("Employees.txt:, "r")
+    EmpFile = open("Employees.txt:", "r")
     while True:
         rundate = input("Enter start date for report (mm/dd/yyy): ")
         if (rundate.upper() == "ALL"):
             break
         try:
-            rundate = datetime.striptime(rundate, %m/%d/$Y)
+            rundate = datetime.striptime(rundate, "%m/%d/$Y")
             break
         except ValueError:
             print("Invalid date format. Try again. ")
             print()
             continue
     while True:
-    EmpDetail = EmpFile.readline()
-    if not EmpDetail:
-        break
+        EmpDetail = EmpFile.readline()
+        if not EmpDetail:
+            break
+        EmpDetail = EmpDetail.replace("\n", "")
+        EmpList = EmpDetail.split("|")
+        fromdate = EmpList[0]
+    if str(rundate.upper()) !== "ALL":
+        checkdate = datetime.striptime(fromdate, "%m/%d/%Y")
+        if (checkdate < rundate):
+            continue
+    todate = EmpList[1]    
+    empName = empList[2]
+    hours = float(empList[3])
+    hourlyRate = float(empList[4])
+    taxRate = float(empList[5])
+        
+    gPay, incomeTax, netPay = CalcTaxAndNetPay(hours, hourlyRate, taxRate)
+    print(fromDate, todate, empName, f"{hours:,.2f}", f"{hourlyRate:,.2f}", f"{gPay:,.2f}", f"{taxRate:,.1%}", f"{incomeTax:,.2f}", f"{netPay:,.2f}")
+    totalEmployees += 1
+    totalHours += hours
+    totalGrossPay += gPay
+    totalTax += incomeTax
+    totalNetPay += netPay
+        
+    empTotals["totEmp"] = totalEmployees
+    empTotals["totHours"] = totalHours
+    empTotals["totGross"] = totalGrossPay
+    empTotals["totNet"] = totalNetPay
+    empTotals["totTax"] = totalTax
+    DetailsPrinted = True
     
-    for empList in empDetailList:
-        fromDate = empList[0]
-        endDate = empList[1]
-        empName = empList[2]
-        hours = empList[3]
-        hourlyRate = empList[4]
-        taxRate = empList[5]
-        
-        gPay, incomeTax, netPay = CalcTaxAndNetPay(hours, hourlyRate, taxRate)
-        print(fromDate, endDate, empName, f"{hours:,.2f}", f"{hourlyRate:,.2f}", f"{gPay:,.2f}", f"{taxRate:,.1%}", f"{incomeTax:,.2f}", f"{netPay:,.2f}")
-        totalEmployees += 1
-        totalHours += hours
-        totalGrossPay += gPay
-        totalTax += incomeTax
-        totalNetPay += netPay
-        
-        empTotals["totEmp"] = totalEmployees
-        empTotals["totHours"] = totalHours
-        empTotals["totGross"] = totalGrossPay
-        empTotals["totNet"] = totalNetPay
-        empTotals["totTax"] = totalTax
+    if (DetailsPrinted)
+        PrintTotals(EmpTotals)
+     else:
+        print("No detailed information to print")
+    
 
 def PrintTotals(empTotals):
        print(f"Total number of Employees:   {empTotals['totEmp']}")
@@ -192,6 +203,30 @@ def ReadEmployeeInformation(fromdate):
     return empDetailList
             
 if __name__ == "__main__":
+    CreateUsers()
+    print()
+    print("Data Entry")
+    UserRole, UserName = Login()
+    DetailsPrinted = False
+    EmpTotals = {}
+    if (UserRole.upper() == "NONE"):
+        print(Username, " is invalid. ")
+    else:
+        if (UserRole.upper() == "ADMIN"):
+            EmpFile = open("Employees.txt", "a+")
+            while True:
+            empname = GetEmpName()
+            if (empname.upper() == "END"):
+                break
+            fromdate, todate = GetDatesWorked()
+            hours = getHoursWorked()
+            hourlyrate = getHoursWorked()
+            taxRate = getTaxRate()
+            EmpDetail = frommdate + "|" + todate + "|" + empname
+        EmpFile.close()
+    printInfo(DetailsPrinted)
+    
+
     empDetailList = []
     empTotals = {}
     while True:
